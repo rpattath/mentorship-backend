@@ -2,28 +2,6 @@ import os
 from datetime import timedelta
 
 
-def get_mock_email_config() -> bool:
-    MOCK_EMAIL = os.getenv("MOCK_EMAIL")
-
-    #if MOCK_EMAIL env variable is set
-    if  MOCK_EMAIL: 
-        # MOCK_EMAIL is case insensitive
-        MOCK_EMAIL = MOCK_EMAIL.lower()
-        
-        if MOCK_EMAIL=="true":
-            return True
-        elif MOCK_EMAIL=="false":
-            return False
-        else: 
-            # if MOCK_EMAIL env variable is set a wrong value
-            raise ValueError(
-                "MOCK_EMAIL environment variable is optional if set, it has to be valued as either 'True' or 'False'"
-            )
-    else:
-        # Default behaviour is to send the email if MOCK_EMAIL is not set
-        return False
-
-
 class BaseConfig(object):
     """Base configuration."""
 
@@ -63,7 +41,6 @@ class BaseConfig(object):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     # mail settings
-    MOCK_EMAIL = get_mock_email_config()
     MAIL_SERVER = os.getenv("MAIL_SERVER")
     MAIL_PORT = 465
     MAIL_USE_TLS = False
@@ -99,7 +76,6 @@ class ProductionConfig(BaseConfig):
     """Production configuration."""
 
     SQLALCHEMY_DATABASE_URI = BaseConfig.build_db_uri()
-    MOCK_EMAIL = False
 
 
 class DevelopmentConfig(BaseConfig):
@@ -114,7 +90,7 @@ class StagingConfig(BaseConfig):
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = BaseConfig.build_db_uri()
-    MOCK_EMAIL = False
+
 
 class LocalConfig(BaseConfig):
     """Local configuration."""
@@ -129,7 +105,6 @@ class TestingConfig(BaseConfig):
     """Testing configuration."""
 
     TESTING = True
-    MOCK_EMAIL = True
 
     # Use in-memory SQLite database for testing
     SQLALCHEMY_DATABASE_URI = "sqlite://"
@@ -139,7 +114,7 @@ def get_env_config() -> str:
     flask_config_name = os.getenv("FLASK_ENVIRONMENT_CONFIG", "dev")
     if flask_config_name not in ["prod", "test", "dev", "local", "stag"]:
         raise ValueError(
-            "The environment config value has to be within these values: prod, dev, test, local, stag."
+            "The environment config value has to be within these values: prod, dev, test."
         )
     return CONFIGURATION_MAPPER[flask_config_name]
 
