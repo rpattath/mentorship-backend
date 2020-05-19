@@ -40,7 +40,7 @@ The changes made in this PR were tested locally. Following are the results:
   * _Test1 Description_  
     _Screenshot/gif_:  
     _Expected Result_:  
-    _Actual Result_:
+    _Actual Result_:  
   * _Test2 Description_  
     _Screenshot/gif_:  
     _Expected Result_:  
